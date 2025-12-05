@@ -1,5 +1,5 @@
 import {router_main} from "./router.js";
-import { loadNavbar } from "./navbar.js";
+import {loadNavbar} from "./navbar.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
