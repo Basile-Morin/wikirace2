@@ -2,7 +2,8 @@
 const routes = {
     "/accueil": "/pages/accueil.html",
     "/about": "/pages/about.html",
-    "/contact": "/pages/contact.html"
+    "/contact": "/pages/contact.html",
+    "/youtube": "/pages/youtube.html"
 };
 
 
