@@ -1,9 +1,7 @@
 // Définition des pages
 const routes = {
-    "/accueil": "/pages/accueil.html",
-    "/about": "/pages/about.html",
-    "/contact": "/pages/contact.html",
-    "/youtube": "/pages/youtube.html"
+    "/youtube": "/pages/youtube/youtube.js",
+    "/accueil": "/pages/accueil/accueil.js"
 };
 
 
@@ -18,9 +16,12 @@ export function router_main() {
         }
 
         try {
-            const response = await fetch(routes[path]);
-            const html = await response.text();
-            app.innerHTML = html;
+            const script = document.createElement("script");
+            script.type = "module";
+            script.src = routes[path];
+            document.body.appendChild(script);
+            
+
         } catch (err) {
             app.innerHTML = "<h1>Erreur</h1><p>Impossible de charger la page.</p>";
         }    

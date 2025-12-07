@@ -1,7 +1,8 @@
 export function loadNavbar() {
-    fetch("navbar.html")
-        .then(response => response.text())
-        .then(html => {
-            document.body.insertAdjacentHTML("afterbegin", html);
-        });
+    const html = `
+    <nav>
+        <a href="/accueil" data-route>Accueil</a>
+        <a href="/youtube" data-route>YouTube</a>
+    </nav>`;
+    document.body.insertAdjacentHTML("afterbegin", html);
 }
