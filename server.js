@@ -9,6 +9,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+let cache = {};
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('*', (req, res) => {
@@ -36,13 +38,18 @@ io.on('connection', (socket) => {
 
   socket.on('youtubeClicked', async () => {
     console.log('L\'utilisateur ', socket.id,' a cliqué sur YouTube');
-    try {
-      data = await searchTrendingVideos();
-      socket.emit('searchComplete', { status: 'success', data: data });
-      console.log(`Résultats envoyés pour : l'utilisateur ${socket.id}`);
-    } catch (error) {
-      console.error("Erreur lors de la recherche trending YouTube:", error);
-      socket.emit('searchComplete', { status: 'error', message: error.message });
+    if (cache.trendingVideos) {
+      console.log('Utilisation des vidéos en cache pour : l\'utilisateur ', socket.id);
+      socket.emit('trendingVideos', { status: 'success', data: cache.trendingVideos });
+    } else {
+      try {
+        cache.trendingVideos = await searchTrendingVideos();
+        socket.emit('trendingVideos', { status: 'success', data: cache.trendingVideos });
+        console.log(`Résultats envoyés pour : l'utilisateur ${socket.id}`);
+      } catch (error) {
+        console.error("Erreur lors de la recherche trending YouTube:", error);
+        socket.emit('trendingVideos', { status: 'error', message: error.message });
+      }
     }
   });
 

@@ -1,48 +1,55 @@
 // Définition des pages
-const routes = {
-    "/youtube": "/pages/youtube/youtube.js",
-    "/accueil": "/pages/accueil/accueil.js"
+import * as youtubePage from "/pages/youtube/youtube.js";
+import * as accueilPage from "/pages/accueil/accueil.js";
+import * as videoPage from "/pages/video.js";
+
+
+const staticRoutes = {
+    "/accueil": accueilPage,
+    "/youtube": youtubePage
 };
+const dynamicRoutes = [
+    {
+
+        pattern: /^\/([^/]+)\/video\/([^/]+)$/,   //site/section/video/videoId
+        handler: (app, match) => {
+            const section = match[1]; 
+            const videoId = match[2];
+            videoPage.render(app, { section, videoId });
+        }
+    }
+];
 
 
 export function router_main() {
 
-    // --- Load current page ---
     async function loadPage(path) {
         const app = document.getElementById("container");
-        if (!routes[path]) {
-            app.innerHTML = "<h1>404</h1><p>Page non trouvée.</p>";
+
+        for (const route of dynamicRoutes) {
+            const match = path.match(route.pattern);
+            if (match) {
+                app.innerHTML = "";
+                route.handler(app, match);
+                return;
+            }
+        }
+
+        const page = staticRoutes[path];
+        if (page) {
+            app.innerHTML = "";
+            page.render(app);
             return;
         }
 
-        try {
-            const script = document.createElement("script");
-            script.type = "module";
-            script.src = routes[path];
-            document.body.appendChild(script);
-            
-
-        } catch (err) {
-            app.innerHTML = "<h1>Erreur</h1><p>Impossible de charger la page.</p>";
-        }    
+        app.innerHTML = "<h1>404</h1><p>Page non trouvée.</p>";
     }
 
-    // --- Lors d’un clic sur un lien ---
-    document.querySelectorAll("[data-route]").forEach(link => {
-        link.addEventListener("click", e => {
-            e.preventDefault();
-            const url = e.target.getAttribute("href");
 
-            history.pushState({}, "", url); // change l’URL sans recharger
-            loadPage(url);
-        });
-    });
 
-    // --- Quand on fait "retour" dans le navigateur ---
     window.onpopstate = () => {
         loadPage(window.location.pathname);
     };
 
-    // --- Initial load ---
     loadPage(window.location.pathname);
 }

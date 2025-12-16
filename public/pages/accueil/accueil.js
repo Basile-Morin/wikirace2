@@ -1,2 +1,3 @@
-const app = document.getElementById("container");
-app.innerHTML = "<h1>accueil</h1>";
+export function render(app) {
+    app.innerHTML = "<h1>accueil</h1>";
+}

@@ -29,20 +29,6 @@ async function searchYouTube(query) {
         const items = response.data.items;
         console.log(`\nNombre de résultats trouvés : ${items.length}`);
 
-        items.forEach(item => {
-            if (item.id && item.id.videoId) {
-                const videoId = item.id.videoId;
-                const title = item.snippet.title;
-                const channel = item.snippet.channelTitle;
-                const url = `https://www.youtube.com/watch?v=${videoId}`;
-
-                console.log(`\n------------------`);
-                console.log(`Titre : ${title}`);
-                console.log(`Chaîne : ${channel}`);
-                console.log(`URL : ${url}`);
-            }
-        });
-
         return items;
 
     } catch (error) {
@@ -65,20 +51,6 @@ async function searchTrendingVideos() {
         const items = response.data.items;
 
         console.log(`\nNombre de vidéos populaires trouvées : ${items.length}`);
-
-        items.forEach(item => {
-            const title = item.snippet.title;
-            const channel = item.snippet.channelTitle;
-            const videoId = item.id;
-            const views = item.statistics.viewCount;
-            const url = `https://www.youtube.com/watch?v=${videoId}`;
-
-            console.log(`\n------------------`);
-            console.log(`Titre    : ${title}`);
-            console.log(`Chaîne   : ${channel}`);
-            console.log(`Vues     : ${views}`);
-            console.log(`URL      : ${url}`);
-        });
 
         return items;
 
